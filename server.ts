@@ -1,15 +1,23 @@
+require("./config");
+
 import http from "http";
-import express, {Express} from "express";
+import express, {Express, Request} from "express";
+
+require("./models/character");
 
 const router: Express = express();
 const server = http.createServer(router);
-const PORT = 3000;
+
+const PORT = process.env.PORT ?? 5000;
 
 router.use(express.urlencoded({ extended: false}));
 router.use(express.json());
 
+//url handling 
+require("./routes")(router);
+
 //header setting
-router.use((req, res, next) => {
+router.use((req: Request, res, next) => {
     // set the CORS policy
     res.header('Access-Control-Allow-Origin', '*');
     // set the CORS headers
@@ -22,6 +30,7 @@ router.use((req, res, next) => {
     next();
 });
 
+
 router.use((req, res, next) => {
     const error = new Error('not found');
     return res.status(404).json({
@@ -29,4 +38,4 @@ router.use((req, res, next) => {
     });
 });
 
-server.listen(PORT, () => { console.log("running"); });
+server.listen(PORT, () => { console.log(`API Server Running on port ${process.env.PORT}`); });
