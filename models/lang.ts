@@ -1,5 +1,5 @@
-type Korean = "Korean" | "한국어";
-type English = "English" | "영어";
+type Korean = "Korean";
+type English = "English";
 
 type availableLangs = Korean | English; 
 
