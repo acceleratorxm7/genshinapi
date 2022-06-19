@@ -1,13 +1,13 @@
 import express, {Request, Response} from "express";
+import searchController from "../controllers/search";
 
 const router = express.Router();
 const path = process.env.PATH;
 
 //process.env.path
-router.route(`${path}/`)
-.get((req: Request, res: Response) => {
-    
-    res.status(200).send("Value 2");
+router.route(`/`)
+.get(async (req: Request, res: Response) => {
+    console.log(await searchController.getMaterial());
 });
 
 router.route("/search")
