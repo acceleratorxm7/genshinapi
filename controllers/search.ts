@@ -1,5 +1,7 @@
+import mysql2 from "mysql2";
+
 export default {
-    getLangs(): string {
+    getMaterial(): string {
         return "a";
     }
 }

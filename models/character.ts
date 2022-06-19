@@ -1,5 +1,4 @@
-import { attackTypeModel, itemBase, itemBaseMultiple } from "./common";
-import { elementModel } from "./element";
+ import { attackTypeModel, itemBase, itemBaseMultiple } from "./common";
 import { weaponModel } from "./weapon";
 import { artifactModel } from "./artifact";
 
@@ -42,8 +41,7 @@ interface CharacterModel {
     gender: genderModel, 
     star: string, 
     icon: string, 
-    element: elementModel, 
-    weapon: weaponModel,
+    element: string, 
     keyword?: string[], 
     quotes: string,
     location: string, 
