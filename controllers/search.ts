@@ -2,13 +2,11 @@ import { RowDataPacket } from "mysql2";
 import { pool } from "../db";
 import { CharacterModel } from "../models/character";
 export default {
-    async getMaterial(): Promise<string> {
+    async getMaterial(): Promise<object> {
         let db = await pool.getConnection();
         
-        let [result]: [RowDataPacket[], any] = await db.query("SELECT * FROM character_info");
-
-        console.log(result);
+        let b =  JSON.parse('{"result":true, "count":42}');
         
-        return "a";
+        return b;
     }
 }
