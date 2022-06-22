@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Type } from "class-transformer";
-import { IsBoolean, IsDefined, IsEnum, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsDefined, IsEnum, IsNumber, IsString, Validate, ValidateNested } from "class-validator";
 
 import { attackTypeModel, elementModel, genderModel, itemBase } from "./common";
 import { weaponModel } from "./weapon";
@@ -16,6 +16,7 @@ class skillRatio {
     @IsNumber({}, {each: true})
     value: number[]
 }
+
 class skill {
     @IsString()
     name: string;
@@ -32,21 +33,37 @@ class skill {
     ratio: skillRatio[];
 }
 
-type build = {
-    type: string, 
-    priority: attackTypeModel[],
-    weapons: weaponModel[], 
-    artifacts: artifactModel[]
+class buildModel {
+    @IsString()
+    type: string;
+    
+    @ValidateNested() 
+    @Type(() => attackTypeModel)
+    priority: attackTypeModel[];
+
+    @ValidateNested()
+    @Type(() => weaponModel)
+    weapons: weaponModel[];
+
+    @ValidateNested()
+    @Type(() => artifactModel)
+    artifacts: artifactModel[];
 }
 
-type passive = {
-    name: string,
-    description: string
+class passiveModel {
+    @IsString()
+    name: string;
+
+    @IsString()
+    description: string;
 }
 
-type constellation = {
-    name: string,
-    description: string
+class constellationModel {
+    @IsString() 
+    name: string;
+
+    @IsString()
+    description: string;
 }
 
 class CharacterModel {
@@ -56,9 +73,8 @@ class CharacterModel {
     @ValidateNested({each: true})
     birth: birthModel;
 
-    //@ValidateNested()
-    //@Type(() => genderModel)
-    @IsString()
+    @ValidateNested()
+    @Type(() => genderModel)
     gender: genderModel; 
 
     @IsString()
@@ -67,24 +83,40 @@ class CharacterModel {
     @IsString()
     icon: string;
 
-    //@ValidateNested()
-    //@Type(() => elementModel)
-    @IsString()
+    @ValidateNested()
+    @Type(() => elementModel)
     element: elementModel;
 
     @ValidateNested()
     @Type(() => skill)
-    skill: skill
+    skill: skill;
 
- /*   keyword?: string[], 
-    quotes: string,
-    location: string, 
-    talent: itemBaseMultiple[],  
-    ascension: itemBase[],
-    skill: skill[],
-    passive: passive[],
-    constellation: constellation[],
-    build: build[]*/
+    @IsString()
+    quotes: string;
+
+    @IsString()
+    location: string;
+    
+    @ValidateNested() 
+    @Type(() => itemBase)
+    talent: itemBase[];  
+    
+    @ValidateNested() 
+    @Type(() => itemBase)
+    ascension: itemBase[];
+
+    @ValidateNested()
+    @Type(() => passiveModel)
+    passive: passiveModel[];
+
+
+    @ValidateNested()
+    @Type(() => constellationModel)
+    constellation: constellationModel[];
+
+    @ValidateNested()
+    @Type(() => buildModel)
+    build: buildModel[];
 }
 
 export {
