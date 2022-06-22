@@ -1,21 +1,35 @@
- import { attackTypeModel, itemBase, itemBaseMultiple } from "./common";
+import "reflect-metadata";
+import { Type } from "class-transformer";
+import { IsBoolean, IsDefined, IsEnum, IsNumber, IsString, ValidateNested } from "class-validator";
+
+import { attackTypeModel, elementModel, genderModel, itemBase } from "./common";
 import { weaponModel } from "./weapon";
 import { artifactModel } from "./artifact";
 
+
 type birthModel = [number, number] | undefined;
 
-type genderModel = "F" | "M"; 
+class skillRatio {
+    @IsString()
+    name: string;
 
-type skill = {
-    name: string,
-    description: string,
-    type: attackTypeModel, 
-    ratio: skillRatio[]
-}
-
-type skillRatio = {
-    name: string, 
+    @IsNumber({}, {each: true})
     value: number[]
+}
+class skill {
+    @IsString()
+    name: string;
+    
+    @IsString()
+    description: string;
+
+    @ValidateNested()
+    @Type(() => attackTypeModel)
+    type: attackTypeModel; 
+
+    @ValidateNested()
+    @Type(() => skillRatio)
+    ratio: skillRatio[];
 }
 
 type build = {
@@ -35,14 +49,34 @@ type constellation = {
     description: string
 }
 
-interface CharacterModel {  
-    name: string,
-    birth: birthModel,
-    gender: genderModel, 
-    star: string, 
-    icon: string, 
-    element: string, 
-    keyword?: string[], 
+class CharacterModel {
+    @IsString()  
+    name: string;
+    
+    @ValidateNested({each: true})
+    birth: birthModel;
+
+    //@ValidateNested()
+    //@Type(() => genderModel)
+    @IsString()
+    gender: genderModel; 
+
+    @IsString()
+    star: string;
+    
+    @IsString()
+    icon: string;
+
+    //@ValidateNested()
+    //@Type(() => elementModel)
+    @IsString()
+    element: elementModel;
+
+    @ValidateNested()
+    @Type(() => skill)
+    skill: skill
+
+ /*   keyword?: string[], 
     quotes: string,
     location: string, 
     talent: itemBaseMultiple[],  
@@ -50,7 +84,7 @@ interface CharacterModel {
     skill: skill[],
     passive: passive[],
     constellation: constellation[],
-    build: build[]
+    build: build[]*/
 }
 
 export {

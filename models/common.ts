@@ -1,36 +1,60 @@
+import { IsEnum, IsNumber, IsString } from "class-validator";
 import { materialModel } from "./material";
 //common data types for other models
-type typeFormat = {
-    text: string,
-    key: string
+class typeFormat {
+    @IsString()
+    text: string;
+
+    @IsString()
+    key: string;
 }
 
-type NormalAttack = "NormalAttack";
-type ElementarySkill = "ElementarySkill";
-type Burst = "Burst";
+enum element {
+    AMENO = 'Ameno',
+    CRYO = 'Cryo',
+    DENDRO = 'Dendro',
+    ELECTRO = 'Electro',
+    GEO = 'Geo',
+    HYDRO = 'Hydro',
+    PYRO = 'Pyro'
+}
 
-type attackType = NormalAttack | ElementarySkill | Burst;
+enum attackType {
+    NormalAttack = "NormalAttack",
+    ElementarySkill = "ElementarySkill",
+    Burst = "Burst"
+}
 
-interface attackTypeModel extends typeFormat {
+enum gender {
+    FEMALE = 'F',
+    MALE = 'M'
+}
+
+class attackTypeModel extends typeFormat {
+    @IsEnum(attackType)
     key: attackType
 }
 
-let a: attackTypeModel = {
-    text: "asdf",
-    key: "NormalAttack"
+class elementModel extends typeFormat {
+    @IsEnum(element)
+    key: element
 }
 
-
-type itemBase = {
-    material: materialModel,
-    amount: number
+class genderModel extends typeFormat {
+    @IsEnum(gender)
+    key: gender
 }
 
-type itemBaseMultiple = itemBase[];
+class itemBase {
+    material: materialModel;
+    
+    @IsNumber()
+    amount: number;
+}
 
 export {
     attackTypeModel,
-    typeFormat,
-    itemBase,
-    itemBaseMultiple
+    genderModel,
+    elementModel,
+    itemBase
 }
