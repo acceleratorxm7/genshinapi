@@ -2,6 +2,7 @@ require("./config");
 
 import http from "http";
 import express, {Express, Request} from "express";
+import { PrismaClient } from "@prisma/client";
 
 require("./models/character");
 
