@@ -8,7 +8,7 @@ const server = http.createServer(router);
 
 const PORT = process.env.PORT ?? 5000;
 
-router.use(express.urlencoded({ extended: false}));
+router.use(express.urlencoded({ extended: true}));
 router.use(express.json());
 
 //url handling 
