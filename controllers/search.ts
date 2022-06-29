@@ -1,20 +1,26 @@
 import { PrismaClient } from "@prisma/client";
-import { transformAndValidate } from "class-transformer-validator";
-import { CharacterModel } from "../models/character";
-import { materialModel } from "../models/material";
 
 const prisma = new PrismaClient();
 
 export default {
-    async getMaterial() {
-        /*
-        try {
-            let result = await transformAndValidate(materialModel, row);
-            console.log(result.constructor);
-            return result;
-        } catch(error) {
-            console.log(error);
-            return {};
-        }*/
+    async getMaterial(args: {text: any, language: String}) {
+        let {text, language} = args;
+
+        prisma.itemClass.findMany({
+            where: {
+                key: "a"      
+            }
+        })
+        return prisma.itemInfo.findMany({
+            include: {
+                organization: {
+                    include: {
+                        category: true,
+                        class: true, 
+                        subclass: true,
+                    }
+                }
+            }
+        });
     }
 }

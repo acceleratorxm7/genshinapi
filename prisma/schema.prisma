@@ -3,10 +3,88 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url = env("DATABASE_URL")    
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Users {
-    id Int @id
+model CharacterInfo {
+  id          Int     @id @default(autoincrement())
+  element_key String
+  elements    Element @relation(fields: [element_key], references: [key])
+  gender      gender?
+  icon        String
+  level       Int
+  location    String
+  name        String
+  quotes      String
+  star        String
+}
+
+model Element {
+  key           String          @unique
+  text          String
+  icon_key      Int
+  icon          Icon            @relation(fields: [icon_key], references: [id])
+  CharacterInfo CharacterInfo[]
+}
+
+model ItemInfo {
+  id              Int              @id @default(autoincrement())
+  name            String
+  description     String?
+  buff_override   String?
+  organization_id Int
+  organization    ItemOrganization @relation(fields: [organization_id], references: [id])
+
+  @@index([name])
+}
+
+model ItemOrganization {
+  id           Int           @id @default(autoincrement())
+  category_key String
+  class_key    String
+  subclass_key String?
+  category     ItemCategory  @relation(fields: [category_key], references: [key])
+  class        ItemClass     @relation(fields: [class_key], references: [key])
+  subclass     ItemSubclass? @relation(fields: [subclass_key], references: [key])
+  ItemInfo     ItemInfo[]
+}
+
+model ItemCategory {
+  key              String             @unique
+  text             String
+  ItemOrganization ItemOrganization[]
+}
+
+model ItemClass {
+  key              String             @unique
+  text             String
+  ItemOrganization ItemOrganization[]
+}
+
+model ItemSubclass {
+  key              String             @unique
+  text             String
+  icon_key         Int?
+  icon             Icon?              @relation(fields: [icon_key], references: [id])
+  ItemOrganization ItemOrganization[]
+}
+
+model Icon {
+  id           Int            @id @default(autoincrement())
+  discord_key  String
+  url          String
+  ItemSubclass ItemSubclass[]
+  Element      Element[]
+}
+
+enum gender {
+  Female
+  Male
+}
+
+enum skillType {
+  NormalAttack
+  ElementarySkill
+  Burst
 }

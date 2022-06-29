@@ -2,9 +2,6 @@ require("./config");
 
 import http from "http";
 import express, {Express, Request} from "express";
-import { PrismaClient } from "@prisma/client";
-
-require("./models/character");
 
 const router: Express = express();
 const server = http.createServer(router);
@@ -30,7 +27,6 @@ router.use((req: Request, res, next) => {
     }
     next();
 });
-
 
 router.use((req, res, next) => {
     const error = new Error('not found');
