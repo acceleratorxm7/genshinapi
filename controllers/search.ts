@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default {
-    async getMaterial(args: {_input: any, _category: any, _class: any, _subclass: any}) {
+    async getMaterial(args: {_input?: string, _category?: string, _class?: string, _subclass?: string}) {
         let { _input, _category, _class, _subclass } = args;
 
         return prisma.itemInfo.findMany({
@@ -37,5 +37,15 @@ export default {
                 }
             }
         });
+    },
+    async getElement() {
+        return prisma.element.findMany({
+            include: {
+                ElementIcon: true
+            }
+        });
+    },
+    async getCharacter(args: {}) {
+        
     }
 }
