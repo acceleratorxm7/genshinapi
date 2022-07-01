@@ -8,36 +8,61 @@ datasource db {
 }
 
 model CharacterInfo {
-  id          Int     @id @default(autoincrement())
-  element_key String
-  elements    Element @relation(fields: [element_key], references: [key])
-  gender      gender?
-  icon        String
-  level       Int
-  location    String
-  name        String
-  quotes      String
-  star        String
+  id                 Int                  @id @default(autoincrement())
+  element_key        String
+  elements           Element              @relation(fields: [element_key], references: [key])
+  gender_key         String
+  gender             Gender               @relation(fields: [gender_key], references: [key])
+  level              Int
+  location           String
+  name               String
+  quotes             String
+  star               String
+  CharacterAscension CharacterAscension[]
+  CharacterIcon      CharacterIcon[]
+}
+
+model CharacterIcon {
+  character_key Int           @id
+  CharacterInfo CharacterInfo @relation(fields: [character_key], references: [id])
+}
+
+model CharacterAscension {
+  character_key Int
+  order         Int
+  item_key      Int
+  item_amount   Int
+  ItemInfo      ItemInfo      @relation(fields: [item_key], references: [id])
+  CharacterInfo CharacterInfo @relation(fields: [character_key], references: [id])
+
+  @@id([character_key, order])
 }
 
 model Element {
-  key           String          @unique
+  key           String          @id
   text          String
-  icon_key      Int
-  icon          Icon            @relation(fields: [icon_key], references: [id])
   CharacterInfo CharacterInfo[]
+  ElementIcon   ElementIcon?
+}
+
+model ElementIcon {
+  element     Element @relation(fields: [key], references: [key])
+  key         String  @id
+  discord_key String
+  url         String
 }
 
 model ItemInfo {
   id              Int              @id @default(autoincrement())
   name            String
-  level           Int 
+  level           Int
   description     String?
-  image           String? 
+  image           String?
   buff_override   String?
   organization_id Int
   organization    ItemOrganization @relation(fields: [organization_id], references: [id])
 
+  CharacterAscension CharacterAscension[]
   @@index([name])
 }
 
@@ -53,40 +78,40 @@ model ItemOrganization {
 }
 
 model ItemCategory {
-  key              String             @unique
+  key              String             @id
   text             String
   ItemOrganization ItemOrganization[]
 }
 
 model ItemClass {
-  key              String             @unique
+  key              String             @id
   text             String
   ItemOrganization ItemOrganization[]
 }
 
 model ItemSubclass {
-  key              String             @unique
+  key              String             @id
   text             String
   icon_key         Int?
-  icon             Icon?              @relation(fields: [icon_key], references: [id])
+  icon             ItemIcon?          @relation(fields: [icon_key], references: [id])
   ItemOrganization ItemOrganization[]
 }
 
-model Icon {
+model ItemIcon {
   id           Int            @id @default(autoincrement())
+  identifier   String?
   discord_key  String
   url          String
   ItemSubclass ItemSubclass[]
-  Element      Element[]
 }
 
-enum gender {
-  Female
-  Male
+model Gender {
+  key           String          @id @unique
+  text          String
+  CharacterInfo CharacterInfo[]
 }
 
-enum skillType {
-  NormalAttack
-  ElementarySkill
-  Burst
+model skillType {
+  key  String @id @unique
+  text String
 }
