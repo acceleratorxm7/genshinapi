@@ -10,21 +10,23 @@ datasource db {
 model CharacterInfo {
   id                 Int                  @id @default(autoincrement())
   element_key        String
-  elements           Element              @relation(fields: [element_key], references: [key])
+  element            Element              @relation(fields: [element_key], references: [key])
   gender_key         String
   gender             Gender               @relation(fields: [gender_key], references: [key])
   level              Int
-  location           String
+  location_key       String
+  location           Location             @relation(fields: [location_key], references: [key])
+  weapon_key         String
+  weapon             WeaponType           @relation(fields: [weapon_key], references: [key])
   name               String
+  icon               String
   quotes             String
+  affiliation        String
   star               String
+  pvurl              String?
+  expurl             String?
+  playurl            String?
   CharacterAscension CharacterAscension[]
-  CharacterIcon      CharacterIcon[]
-}
-
-model CharacterIcon {
-  character_key Int           @id
-  CharacterInfo CharacterInfo @relation(fields: [character_key], references: [id])
 }
 
 model CharacterAscension {
@@ -41,15 +43,9 @@ model CharacterAscension {
 model Element {
   key           String          @id
   text          String
+  emoji         String
+  url           String
   CharacterInfo CharacterInfo[]
-  ElementIcon   ElementIcon?
-}
-
-model ElementIcon {
-  element     Element @relation(fields: [key], references: [key])
-  key         String  @id
-  discord_key String
-  url         String
 }
 
 model ItemInfo {
@@ -71,9 +67,11 @@ model ItemOrganization {
   category_key String
   class_key    String
   subclass_key String?
+  icon_key     Int?
   category     ItemCategory  @relation(fields: [category_key], references: [key])
   class        ItemClass     @relation(fields: [class_key], references: [key])
   subclass     ItemSubclass? @relation(fields: [subclass_key], references: [key])
+  icon         ItemIcon?     @relation(fields: [icon_key], references: [id])
   ItemInfo     ItemInfo[]
 }
 
@@ -92,26 +90,38 @@ model ItemClass {
 model ItemSubclass {
   key              String             @id
   text             String
-  icon_key         Int?
-  icon             ItemIcon?          @relation(fields: [icon_key], references: [id])
   ItemOrganization ItemOrganization[]
 }
 
 model ItemIcon {
-  id           Int            @id @default(autoincrement())
+  id           Int                @id @default(autoincrement())
   identifier   String?
-  discord_key  String
+  emoji        String
   url          String
-  ItemSubclass ItemSubclass[]
+  ItemSubclass ItemOrganization[]
 }
 
 model Gender {
-  key           String          @id @unique
+  key           String          @id 
   text          String
   CharacterInfo CharacterInfo[]
 }
 
-model skillType {
+model SkillType {
   key  String @id @unique
   text String
+}
+
+model WeaponType {
+  key           String          @id 
+  text          String
+  emoji         String 
+  url           String
+  CharacterInfo CharacterInfo[]
+}
+
+model Location {
+  key           String          @id 
+  text          String
+  CharacterInfo CharacterInfo[]
 }
